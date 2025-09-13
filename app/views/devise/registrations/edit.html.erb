@@ -10,6 +10,16 @@
           <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
         </div>
 
+        <div>
+          <%= f.label :first_name, class: "block text-sm font-medium text-gray-700" %>
+          <%= f.text_field :first_name, autocomplete: "first_name", class: "block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+        </div>
+
+        <div>
+          <%= f.label :last_name, class: "block text-sm font-medium text-gray-700" %>
+          <%= f.text_field :last_name, autocomplete: "last_name", class: "block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+        </div>
+
         <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
           <div class="text-sm text-gray-500">Currently waiting confirmation for: <span class="font-medium text-gray-700"><%= resource.unconfirmed_email %></span></div>
         <% end %>
