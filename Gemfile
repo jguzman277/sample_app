@@ -70,3 +70,4 @@ gem "devise", "~> 4.9"
 gem "madmin"
 gem 'cancancan'
 gem 'sidekiq'
+gem 'dotenv-rails', groups: [:development, :test]
