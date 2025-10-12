@@ -353,6 +353,12 @@ GEM
       logger (>= 1.6.2)
       rack (>= 3.1.0)
       redis-client (>= 0.23.2)
+    simple_form (5.3.1)
+      actionpack (>= 5.2)
+      activemodel (>= 5.2)
+    simple_form-tailwind (0.2.0)
+      railties (>= 7.0)
+      simple_form (>= 5.0)
     solid_cable (3.0.12)
       actioncable (>= 7.2)
       activejob (>= 7.2)
@@ -456,6 +462,8 @@ DEPENDENCIES
   rubocop-rails-omakase
   selenium-webdriver
   sidekiq
+  simple_form (~> 5.3)
+  simple_form-tailwind
   solid_cable
   solid_cache
   solid_queue

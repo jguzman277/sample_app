@@ -77,3 +77,6 @@ gem "madmin"
 gem 'cancancan'
 gem 'sidekiq'
 gem 'dotenv-rails', groups: [:development, :test]
+
+gem "simple_form", "~> 5.3"
+gem 'simple_form-tailwind'
