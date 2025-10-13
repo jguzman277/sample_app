@@ -454,6 +454,7 @@ DEPENDENCIES
   jbuilder
   kamal
   madmin
+  pagy (~> 9.4)
   pg (~> 1.1)
   propshaft
   puma (>= 5.0)

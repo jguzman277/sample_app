@@ -80,3 +80,5 @@ gem 'dotenv-rails', groups: [:development, :test]
 
 gem "simple_form", "~> 5.3"
 gem 'simple_form-tailwind'
+
+gem "pagy", "~> 9.4"

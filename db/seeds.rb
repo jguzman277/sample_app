@@ -1,29 +1,19 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
+# This file populates the database with 100 sample blog posts
+# using the Faker gem.
 #
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# To run this file, use the command: rails db:seed
 
-# Clear out existing users to start fresh
+# Clear existing posts to avoid duplicates when re-seeding
+Post.destroy_all
 
-puts "Seeding database..."
+puts "Creating 100 sample posts..."
 
-puts "Destroying all existing users..."
-User.destroy_all
-
-puts "Creating 10 new users..."
-
-10.times do
-  User.create!(
-    first_name: Faker::Name.first_name ,
-    last_name: Faker::Name.last_name,
-    email: Faker::Internet.unique.email, # .unique ensures no duplicate emails
-    password: 'password123' # Use a standard password for seeded data
+100.times do
+  Post.create!(
+    title: Faker::Lorem.sentence(word_count: 3, random_words_to_add: 4),
+    body: Faker::Lorem.paragraphs(number: 4).join("\n\n")
   )
 end
 
-puts "Finished seeding!"
+puts "Finished!"
+puts "Created #{Post.count} posts."
