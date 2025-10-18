@@ -1,0 +1,11 @@
+<%= turbo_stream.replace "comment_notifications_list" do %>
+  <%= render partial: 'comments/notifications_list', locals: { comments: current_user.all_comment_notifications.limit(10) } %>
+<% end %>
+
+<%= turbo_stream.replace "notifications_badge" do %>
+  <% if current_user.unread_comment_notifications_count > 0 %>
+    <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+      <%= current_user.unread_comment_notifications_count > 9 ? '9+' : current_user.unread_comment_notifications_count %>
+    </span>
+  <% end %>
+<% end %>

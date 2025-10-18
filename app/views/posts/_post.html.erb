@@ -3,8 +3,14 @@
     <strong class="block font-medium mb-1">Title:</strong>
     <%= post.title %>
   </div>
+
   <div>
     <strong class="block font-medium mb-1">Body:</strong>
     <%= post.body %>
+  </div>
+
+    <div>
+    <strong class="block font-medium mb-1">Author:</strong>
+    <%= post.user.first_name %> <%= post.user.last_name %>
   </div>
 </div>

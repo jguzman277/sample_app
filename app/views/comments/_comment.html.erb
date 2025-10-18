@@ -1,0 +1,10 @@
+<%# app/views/comments/_comment.html.erb %>
+<div id="<%= dom_id comment %>" class="p-4 border rounded-md bg-gray-50">
+  <div class="flex justify-between items-start">
+    <p class="text-gray-800 flex-1 pr-4"><%= comment.body %></p>
+    <%= button_to "Delete", [post, comment], method: :delete, class: "text-red-600 hover:text-red-800 text-sm font-medium", data: { turbo_confirm: "Are you sure?" } %>
+  </div>
+  <p class="text-xs text-gray-500 mt-2">
+    Posted <%= time_ago_in_words(comment.created_at) %> ago
+  </p>
+</div>

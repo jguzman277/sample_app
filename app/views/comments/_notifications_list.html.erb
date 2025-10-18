@@ -1,0 +1,64 @@
+<% if comments.any? %>
+  <div class="divide-y divide-gray-200">
+    <% comments.each do |comment| %>
+      <%= turbo_frame_tag "comment_notification_#{comment.id}" do %>
+        <div class="<%= comment.notification_read? ? 'bg-white' : 'bg-indigo-50' %> hover:bg-gray-50 transition-colors">
+          <div class="px-4 py-3 flex items-start gap-3">
+            <!-- Commenter Avatar -->
+            <div class="flex-shrink-0">
+              <div class="h-10 w-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
+                <%= comment.user.email.first.upcase %>
+              </div>
+            </div>
+
+            <!-- Notification Content -->
+            <div class="flex-1 min-w-0">
+              <p class="text-sm text-gray-900">
+                <span class="font-medium"><%= comment.user.email %></span>
+                commented on your post
+              </p>
+              <p class="text-sm text-gray-600 mt-1 line-clamp-2">
+                "<%= truncate(comment.body, length: 80) %>"
+              </p>
+              <p class="text-xs text-gray-500 mt-1">
+                <%= time_ago_in_words(comment.created_at) %> ago
+              </p>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex-shrink-0 flex flex-col gap-1">
+              <% unless comment.notification_read? %>
+                <%= button_to mark_notification_read_comment_path(comment),
+                              method: :patch,
+                              data: { turbo_stream: true },
+                              title: "Mark as read",
+                              class: "text-indigo-600 hover:text-indigo-800 p-1" do %>
+                  <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                <% end %>
+              <% end %>
+              
+              <%= button_to clear_notification_comment_path(comment),
+                            method: :delete,
+                            data: { turbo_stream: true },
+                            title: "Clear notification",
+                            class: "text-red-600 hover:text-red-800 p-1" do %>
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="px-4 py-12 text-center">
+    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+    </svg>
+    <p class="mt-2 text-sm text-gray-500">No comment notifications</p>
+  </div>
+<% end %>

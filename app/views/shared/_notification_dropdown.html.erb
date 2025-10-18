@@ -1,0 +1,63 @@
+<div class="ml-3 relative" 
+     data-controller="notifications" 
+     data-notifications-unread-count-value="<%= current_user.unread_comment_notifications_count %>">
+  <!-- Notification Bell Button -->
+  <button 
+    type="button" 
+    data-action="click->notifications#toggle"
+    class="relative bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+    <span class="sr-only">View notifications</span>
+    <!-- Bell Icon -->
+    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+    </svg>
+    
+    <!-- Badge for unread count -->
+    <% if current_user.unread_comment_notifications_count > 0 %>
+      <span data-notifications-target="badge" 
+            id="notifications_badge"
+            class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+        <%= current_user.unread_comment_notifications_count > 9 ? '9+' : current_user.unread_comment_notifications_count %>
+      </span>
+    <% else %>
+      <span data-notifications-target="badge" id="notifications_badge" class="hidden"></span>
+    <% end %>
+  </button>
+
+  <!-- Dropdown Menu -->
+  <div 
+    data-notifications-target="menu"
+    class="hidden origin-top-right absolute right-0 mt-2 w-96 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-40 max-h-96 overflow-hidden flex flex-col"
+    role="menu">
+    
+    <!-- Header -->
+    <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between bg-gray-50">
+      <h3 class="text-sm font-semibold text-gray-900">Notifications</h3>
+      <div class="flex gap-2">
+        <% if current_user.unread_comment_notifications.any? %>
+          <%= button_to mark_all_notifications_read_comments_path, 
+                        method: :patch,
+                        data: { turbo_stream: true },
+                        class: "text-xs text-indigo-600 hover:text-indigo-800 font-medium" do %>
+            Mark all read
+          <% end %>
+        <% end %>
+        <% if current_user.unread_comment_notifications.any? %>
+          <%= button_to clear_all_notifications_comments_path, 
+                        method: :delete,
+                        data: { turbo_stream: true, turbo_confirm: "Clear all notifications?" },
+                        class: "text-xs text-red-600 hover:text-red-800 font-medium" do %>
+            Clear all
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Notifications List -->
+    <div data-notifications-target="list" class="overflow-y-auto flex-1">
+      <%= turbo_frame_tag "comment_notifications_list" do %>
+        <%= render partial: 'comments/notifications_list', locals: { comments: current_user.unread_comment_notifications.limit(10) } %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -41,39 +41,130 @@
       </div>
 
       <!-- Profile dropdown -->
-      <div data-controller="dropdown" data-dropdown-hidden-class="hidden" class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-        <button type="button" class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-          <span class="sr-only">View notifications</span>
-          <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0a2 2 0 11-4 0m4 0h-4" />
-          </svg>
-        </button>
+        <%# --- START: NOTIFICATION DROPDOWN --- %>
+        <% if user_signed_in? %>
+        <div class="ml-3 relative" 
+          data-controller="notifications" 
+          data-notifications-unread-count-value="<%= current_user.unread_comment_notifications_count %>">
+          <!-- Notification Bell Button -->
+          <button 
+            type="button" 
+            data-action="click->notifications#toggle"
+            class="relative bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+            <span class="sr-only">View notifications</span>
+            <!-- Bell Icon -->
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+            </svg>
+            
+            <!-- Badge for unread count -->
+            <% if current_user.unread_comment_notifications_count > 0 %>
+              <span data-notifications-target="badge" 
+                    id="notifications_badge"
+                    class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                <%= current_user.unread_comment_notifications_count > 9 ? '9+' : current_user.unread_comment_notifications_count %>
+              </span>
+            <% else %>
+              <span data-notifications-target="badge" id="notifications_badge" class="hidden"></span>
+            <% end %>
+          </button>
 
-        <!-- Profile dropdown -->
-        <div class="ml-3 relative">
-          <div>
-            <button type="button" data-action="dropdown#toggle" class="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-              <span class="sr-only">Open user menu</span>
-              <div class="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
-                <!-- Example: user initials from a Rails helper or variable -->
-                
-                <span>JG</span>
-              </div>
-            </button>
-          </div>
-
-          <!-- Dropdown menu -->
-          
-            <div data-dropdown-target="menu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                <% if user_signed_in? %>    
-                    <%= link_to "Your Profile", edit_user_registration_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
-                    <%= link_to "Sign out", destroy_user_session_path, data: { turbo_method: :delete }, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
-                <% else %>
-                    <%= link_to "Sign In", new_user_session_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
-                    <%= link_to "Sign Up", new_user_registration_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+          <!-- Dropdown Menu -->
+          <div 
+            data-notifications-target="menu"
+            class="hidden origin-top-right absolute right-0 mt-2 w-96 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-40 max-h-96 overflow-hidden flex flex-col"
+            role="menu">
+            
+            <!-- Header -->
+            <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between bg-gray-50">
+              <h3 class="text-sm font-semibold text-gray-900">Comment Notifications</h3>
+              <div class="flex gap-2">
+                <% if current_user.unread_comment_notifications.any? %>
+                  <%= button_to mark_all_notifications_read_comments_path, 
+                                method: :patch,
+                                data: { turbo_stream: true },
+                                class: "text-xs text-indigo-600 hover:text-indigo-800 font-medium" do %>
+                    Mark all read
+                  <% end %>
                 <% end %>
+                <% if current_user.unread_comment_notifications.any? %>
+                  <%= button_to clear_all_notifications_comments_path, 
+                                method: :delete,
+                                data: { turbo_stream: true, turbo_confirm: "Clear all comment notifications?" },
+                                class: "text-xs text-red-600 hover:text-red-800 font-medium" do %>
+                    Clear all
+                  <% end %>
+                <% end %>
+              </div>
             </div>
-          
+
+            <!-- Notifications List -->
+            <div data-notifications-target="list" class="overflow-y-auto flex-1">
+              <%= turbo_frame_tag "comment_notifications_list" do %>
+                <%= render partial: 'comments/notifications_list', locals: { comments: current_user.all_comment_notifications.limit(10) } %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <% end %>
+        <%# --- END: NOTIFICATION DROPDOWN --- %>
+
+      <!-- Profile dropdown -->
+      <div class="ml-3 relative" data-controller="dropdown">
+        <div>
+          <button 
+            type="button" 
+            data-action="click->dropdown#toggle" 
+            class="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" 
+            id="user-menu-button" 
+            aria-expanded="false" 
+            aria-haspopup="true">
+            <span class="sr-only">Open user menu</span>
+            <div class="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
+              <span>
+                <% if user_signed_in? && current_user.first_name.present? && current_user.last_name.present? %>
+                  <%= current_user.first_name.first.upcase %><%= current_user.last_name.first.upcase %>
+                <% elsif user_signed_in? %>
+                  <%= current_user.email.first(2).upcase %>
+                <% else %>
+                  G
+                <% end %>
+              </span>
+            </div>
+          </button>
+        </div>
+
+        <!-- Dropdown menu -->
+        <div 
+          data-dropdown-target="menu" 
+          class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50" 
+          role="menu" 
+          aria-orientation="vertical" 
+          aria-labelledby="user-menu-button" 
+          tabindex="-1">
+          <% if user_signed_in? %>    
+            <%= link_to "Your Profile", 
+                        edit_user_registration_path, 
+                        data: { action: "click->dropdown#close" },
+                        class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100", 
+                        role: "menuitem" %>
+            <%= link_to "Sign out", 
+                        destroy_user_session_path, 
+                        data: { turbo_method: :delete, action: "click->dropdown#close" }, 
+                        class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100", 
+                        role: "menuitem" %>
+          <% else %>
+            <%= link_to "Sign In", 
+                        new_user_session_path, 
+                        data: { action: "click->dropdown#close" },
+                        class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100", 
+                        role: "menuitem" %>
+            <%= link_to "Sign Up", 
+                        new_user_registration_path, 
+                        data: { action: "click->dropdown#close" },
+                        class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100", 
+                        role: "menuitem" %>
+          <% end %>
         </div>
       </div>
     </div>

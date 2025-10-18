@@ -1,0 +1,6 @@
+<%= turbo_stream.replace "comment_notifications_list" do %>
+  <%= render partial: 'comments/notifications_list', locals: { comments: [] } %>
+<% end %>
+
+<%= turbo_stream.replace "notifications_badge" do %>
+<% end %>

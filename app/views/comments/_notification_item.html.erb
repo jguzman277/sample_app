@@ -1,0 +1,37 @@
+<div class="<%= comment.notification_read? ? 'bg-white' : 'bg-indigo-50' %> hover:bg-gray-50 transition-colors">
+  <div class="px-4 py-3 flex items-start gap-3">
+    <!-- Commenter Avatar -->
+    <div class="flex-shrink-0">
+      <div class="h-10 w-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
+        <%= comment.user.email.first.upcase %>
+      </div>
+    </div>
+
+    <!-- Notification Content -->
+    <div class="flex-1 min-w-0">
+      <p class="text-sm text-gray-900">
+        <span class="font-medium"><%= comment.user.email %></span>
+        commented on your post: <span class="font-medium"><%= comment.post.title %></span>
+      </p>
+      <p class="text-sm text-gray-600 mt-1 line-clamp-2">
+        "<%= comment.body %>"
+      </p>
+      <p class="text-xs text-gray-500 mt-1">
+        <%= time_ago_in_words(comment.created_at) %> ago
+      </p>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex-shrink-0 flex flex-col gap-1">
+      <%= button_to clear_notification_comment_path(comment),
+                    method: :delete,
+                    data: { turbo_stream: true },
+                    title: "Clear notification",
+                    class: "text-red-600 hover:text-red-800 p-1" do %>
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      <% end %>
+    </div>
+  </div>
+</div>

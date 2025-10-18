@@ -63,9 +63,9 @@ group :test do
 end
 
 group :development, :test do
-  gem 'rspec-rails', '~> 6.1'
-  gem 'factory_bot_rails'
-  gem 'faker'
+  gem "rspec-rails", "~> 6.1"
+  gem "factory_bot_rails"
+  gem "faker"
 end
 
 gem "tailwindcss-ruby", "~> 4.1"
@@ -74,11 +74,13 @@ gem "tailwindcss-rails", "~> 4.3"
 
 gem "devise", "~> 4.9"
 gem "madmin"
-gem 'cancancan'
-gem 'sidekiq'
-gem 'dotenv-rails', groups: [:development, :test]
+gem "cancancan"
+gem "sidekiq"
+gem "dotenv-rails", groups: [ :development, :test ]
 
 gem "simple_form", "~> 5.3"
-gem 'simple_form-tailwind'
+gem "simple_form-tailwind"
 
 gem "pagy", "~> 9.4"
+
+# gem "noticed", "~> 2.9"

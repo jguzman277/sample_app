@@ -1,5 +1,20 @@
 Rails.application.routes.draw do
-  resources :posts
+  resources :posts do
+    # Nests comment routes under post routes
+    resources :comments, only: [ :create, :destroy ]
+  end
+
+  resources :comments, only: [] do
+    member do
+      patch :mark_notification_read
+      delete :clear_notification
+    end
+    collection do
+      patch :mark_all_notifications_read
+      delete :clear_all_notifications
+    end
+  end
+
   draw :madmin
   devise_for :users
   get "home/index"
