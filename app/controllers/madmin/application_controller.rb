@@ -3,13 +3,13 @@ module Madmin
     before_action :authenticate_admin_user
 
     def authenticate_admin_user
-      # TODO: Add your authentication logic here
+      # Ensure user is signed in with Devise
+      authenticate_user!
 
-      # For example, with Rails 8 authentication
-      # redirect_to "/", alert: "Not authorized." unless authenticated? && Current.user.admin?
-
-      # Or with Devise
-      # redirect_to "/", alert: "Not authorized." unless current_user&.admin?
+      # Check if user has admin privileges
+      unless current_user.admin?
+        redirect_to root_path, alert: "You are not authorized to access the admin area."
+      end
     end
   end
 end

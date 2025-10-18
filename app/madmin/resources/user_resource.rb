@@ -14,6 +14,8 @@ class UserResource < Madmin::Resource
   attribute :updated_at, form: false
 
   # Associations
+  attribute :posts
+  attribute :comments
 
   # Add scopes to easily filter records
   # scope :published
@@ -24,7 +26,13 @@ class UserResource < Madmin::Resource
   # end
 
   # Customize the display name of records in the admin area.
-  # def self.display_name(record) = record.name
+  def self.display_name(record)
+    if record.first_name.present? && record.last_name.present?
+      "#{record.first_name} #{record.last_name}"
+    else
+      record.email
+    end
+  end
 
   # Customize the default sort column and direction.
   # def self.default_sort_column = "created_at"

@@ -1,5 +1,7 @@
 # Below are the routes for madmin
 namespace :madmin do
+  resources :comments
+  resources :posts
   namespace :action_text do
     resources :encrypted_rich_texts
   end
